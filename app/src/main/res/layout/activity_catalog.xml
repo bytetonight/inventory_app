@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".CatalogActivity"
+    style="@style/catalog_main_container">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recView"
+        style="@style/catalog_recyclerview" />
+
+
+
+    <!-- Empty view for the list -->
+    <RelativeLayout
+        android:id="@+id/empty_view"
+        style="@style/empty_view_container">
+
+        <ImageView
+            android:id="@+id/empty_image"
+            android:src="@drawable/warehouse_clipart"
+            style="@style/empty_view_image" />
+
+        <TextView
+            android:id="@+id/empty_title_text"
+            android:text="@string/empty_view_title_text"
+            style="@style/emüty_view_message" />
+
+        <TextView
+            android:id="@+id/empty_subtitle_text"
+            android:text="@string/empty_view_subtitle_text"
+            style="@style/empty_view_hint" />
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:src="@drawable/ic_plus_one_white_24dp"
+        style="@style/catalog_fab_btn" />
+</RelativeLayout>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="handlers"
+            type="android.example.com.myinventoryapp.Handlers" />
+
+        <variable
+            name="product"
+            type="android.example.com.myinventoryapp.Product" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        style="@style/list_item_cardview"
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            style="@style/list_item_container"
+            android:onClick="@{(v) -> handlers.onClickViewProductDetails(v, product)}">
+
+            <!--
+            On ImageView below,
+            using wrap_content on height or width looks nicer with adjustViewBounds
+            and a maxWidth but makes Images flash every time a list item changes
+            -->
+            <ImageView
+                style="@style/list_item_product_image"
+                android:contentDescription="@{product.name}"
+                app:imageUrl="@{product.image}"
+                tools:src="@drawable/t_shirt_400" />
+
+            <LinearLayout style="@style/list_item_text_container">
+
+                <TextView
+                    style="@style/list_item_header"
+                    android:text="@{product.name}"
+                    tools:text="Shirt" />
+
+                <TableLayout style="@style/list_item_table">
+
+                    <TableRow style="@style/List_item_table_row">
+
+                        <TextView
+                            style="@style/label_column_2"
+                            android:text="@string/stock_quantity" />
+
+                        <TextView
+                            style="@style/field_column_2"
+                            android:text="@{product.quantity}"
+                            tools:text="5" />
+                    </TableRow>
+
+                    <TableRow style="@style/List_item_table_row">
+
+                        <TextView
+                            style="@style/label_column_2"
+                            android:text="@string/label_product_price" />
+
+                        <TextView
+                            style="@style/field_column_2"
+                            android:text="@{product.getLocalePrice()}"
+                            tools:text="5" />
+                    </TableRow>
+
+                    <TableRow style="@style/List_item_table_row">
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/product_image_action"
+                            style="@style/list_item_purchase_button"
+                            android:onClick="@{(v) -> handlers.onSaleClick(v, product)}"
+                            android:text="@string/add_to_cart"></android.support.v7.widget.AppCompatButton>
+                    </TableRow>
+                </TableLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>

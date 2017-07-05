@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="handlers"
+            type="android.example.com.myinventoryapp.Handlers" />
+
+        <variable
+            name="product"
+            type="android.example.com.myinventoryapp.Product" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/editor_main_layout"
+        tools:context=".EditorActivity">
+
+        <LinearLayout
+            style="@style/editor_image_container"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/product_image"
+                style="@style/editor_image"
+                app:imageUrl="@{product.image}" />
+
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/product_image_action"
+                style="@style/editor_btn_image_action"
+                android:text="@string/editor_add_image_text"
+                app:backgroundTint="@color/colorPrimaryDark" />
+
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/editor_field_container">
+
+            <TableLayout style="@style/list_item_table">
+
+                <TableRow>
+
+                    <TextView
+                        style="@style/label_column"
+                        android:text="@string/label_product_name"
+                        tools:text="@string/label_product_name" />
+
+                    <EditText
+                        android:id="@+id/edit_product_name"
+                        style="@style/field_column"
+                        android:hint="@string/hint_product_name"
+                        android:inputType="textCapWords"
+                        android:text="@{product.name}" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        style="@style/label_column"
+                        android:text="@string/label_product_price"
+                        tools:text="@string/label_product_price" />
+
+                    <EditText
+                        android:id="@+id/edit_product_price"
+                        style="@style/field_column"
+                        android:hint="@string/hint_price"
+                        android:inputType="numberDecimal"
+                        android:text="@{product.getLocalePrice()}" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        style="@style/label_column"
+                        android:text="@string/label_supplier_name"
+                        tools:text="@string/label_supplier_name" />
+
+                    <EditText
+                        android:id="@+id/supplier_name"
+                        style="@style/field_column"
+                        android:hint="@string/hint_supplier_name"
+                        android:inputType="textCapCharacters"
+                        android:text="@={product.supplierName}" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        style="@style/label_column"
+                        android:text="@string/label_supplier_email"
+                        tools:text="@string/label_supplier_email" />
+
+                    <EditText
+                        android:id="@+id/supplier_email"
+                        style="@style/field_column"
+                        android:hint="@string/hint_supplier_email"
+                        android:inputType="textCapCharacters"
+                        android:text="@={product.supplierMail}" />
+                </TableRow>
+            </TableLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/editor_quantity_btn_container">
+
+            <ImageView
+                android:id="@+id/btn_remove"
+                style="@style/editor_quantity_btn"
+                android:src="@drawable/ic_remove_circle_outline_white_36dp" />
+
+
+            <TextView
+                android:id="@+id/edit_quantity_text_view"
+                style="@style/editor_quantity_field"
+                android:text="@={product.quantity}"
+                tools:text="5" />
+
+            <ImageView
+                android:id="@+id/btn_add"
+                style="@style/editor_quantity_btn"
+                android:src="@drawable/ic_add_circle_outline_white_36dp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</layout>
