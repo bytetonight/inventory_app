@@ -46,12 +46,10 @@ public class Product {
         product.supplierMail =  cursor.getString(cursor.getColumnIndex(
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL));
 
-        String tempQuantity = cursor.getString(cursor.getColumnIndex(
+        product.quantity = cursor.getInt(cursor.getColumnIndex(
                 ProductEntry.COLUMN_PRODUCT_QUANTITY));
-        if (!tempQuantity.isEmpty())
-            product.quantity =  Integer.parseInt(tempQuantity) ;
-        else
-            product.quantity = 0;
+
+
         return product;
     }
 
