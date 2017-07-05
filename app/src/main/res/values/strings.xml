@@ -99,10 +99,8 @@
     <!-- Label for dropdown menu option if the product is female [CHAR LIMIT=20] -->
     <string name="gender_female">Female</string>
 
-    <!-- Label for the product's breed if the breed is unknown [CHAR LIMIT=20] -->
-    <string name="unknown_breed">Unknown</string>
 
-    <string name="currency">$</string>
+
     <string name="label_product_name">Name</string>
     <string name="label_product_price">Price</string>
     <string name="label_product_quantity">Quantity</string>
@@ -124,5 +122,8 @@
     <string name="stock_quantity">Stock Quantity</string>
     <string name="add_to_cart">Add to cart</string>
     <string name="negative_quantity_notice">Negative Quantity not possible</string>
+    <string name="no_app_installed">It seems you have no suitable App installed and setup to send Emails</string>
+    <string name="product_request_subject">Product request</string>
+    <string name="product_request_message">Dear Merchant, I require your product \"%1$s\" in a Quantity of 10.</string>
 
 </resources>

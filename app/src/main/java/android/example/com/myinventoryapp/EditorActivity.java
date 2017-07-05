@@ -36,6 +36,8 @@ import android.widget.Toast;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
+import static android.R.id.message;
+
 
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -303,12 +305,17 @@ public class EditorActivity extends AppCompatActivity implements
         Intent intent = new Intent(android.content.Intent.ACTION_SENDTO);
         intent.setType("text/plain");
         intent.setData(Uri.parse("mailto:" + supplierEmailEditText.getText().toString().trim()));
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Product request");
-        String message = "Request for 10 " + productNameEditText.getText().toString().trim();
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.product_request_subject));
+
+        String msg = String.format(
+                getString(R.string.product_request_message),
+                productNameEditText.getText().toString().trim());
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, msg);
 
         if (isResolvedActivity(intent))
             startActivity(intent);
+        else
+            Toast.makeText(this, R.string.no_app_installed, Toast.LENGTH_SHORT).show();
     }
 
     private boolean isResolvedActivity(Intent intent) {
