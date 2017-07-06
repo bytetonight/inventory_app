@@ -1,3 +1,17 @@
+/*
+ * Copyright (c) 2017. bytetonight@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package android.example.com.myinventoryapp;
 
 
@@ -35,8 +49,6 @@ import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-
-import static android.R.id.message;
 
 
 public class EditorActivity extends AppCompatActivity implements
@@ -137,7 +149,7 @@ public class EditorActivity extends AppCompatActivity implements
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
             return;
         }
         openSelector();

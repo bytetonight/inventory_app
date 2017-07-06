@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  ~ Copyright (c) 2017. bytetonight@gmail.com
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <resources>
     <!-- Name for the application [CHAR LIMIT=12] -->
     <string name="app_name">Inventory App</string>
@@ -19,11 +33,6 @@
     <!-- Subtitle text for the empty view that prompts the user to add a product [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Get started by adding products</string>
 
-    <!-- Title for the activity to add a new product [CHAR LIMIT=20] -->
-    <string name="editor_activity_title_new_product">Add a Product</string>
-
-    <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
-    <string name="editor_activity_title_edit_product">Edit Product</string>
 
     <!-- Label for editor menu option to save product and leave editor [CHAR LIMIT=20] -->
     <string name="action_save">Save</string>
@@ -67,38 +76,11 @@
     <!-- Dialog button text for the option to cancel deletion of the current product [CHAR LIMIT=20] -->
     <string name="cancel">Cancel</string>
 
-    <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
-    <string name="category_overview">Overview</string>
-
-    <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
-    <string name="category_gender">Gender</string>
-
-    <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
-    <string name="category_measurement">Measurement</string>
-
-    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_product_name">Name</string>
-
-    <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_product_breed">Breed</string>
-
-    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_product_weight">Weight</string>
-
-    <!-- Units for weight of the product (kilograms) [CHAR LIMIT=5] -->
-    <string name="unit_product_weight">kg</string>
-
-    <!-- Label for dropdown menu option if the product's gender is unknown [CHAR LIMIT=20] -->
     <string name="gender_not_applicable">Not Applicable</string>
-
     <string name="gender_unisex">Unisex</string>
-
-    <!-- Label for dropdown menu option if the product is male [CHAR LIMIT=20] -->
     <string name="gender_male">Male</string>
-
-    <!-- Label for dropdown menu option if the product is female [CHAR LIMIT=20] -->
     <string name="gender_female">Female</string>
-
 
 
     <string name="label_product_name">Name</string>
@@ -110,8 +92,6 @@
     <string name="hint_price">1.99</string>
     <string name="hint_supplier_name">Supplier Name</string>
     <string name="hint_supplier_email">merchant@supply.com</string>
-    <string name="btn_quantity_decrement">-</string>
-    <string name="btn_quantity_increment">+</string>
     <string name="editor_title_add_product">Add Product</string>
     <string name="editor_title_edit_product">Edit Product</string>
     <string name="editor_replace_image_text">Replace Image</string>

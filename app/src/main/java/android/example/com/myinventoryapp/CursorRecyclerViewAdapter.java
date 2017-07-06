@@ -1,6 +1,3 @@
-package android.example.com.myinventoryapp;
-
-
 /*
  * Copyright (C) 2014 skyfish.jy@gmail.com
  *
@@ -17,6 +14,9 @@ package android.example.com.myinventoryapp;
  * limitations under the License.
  *
  */
+
+package android.example.com.myinventoryapp;
+
 
 import android.content.Context;
 import android.database.Cursor;
