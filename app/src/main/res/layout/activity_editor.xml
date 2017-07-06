@@ -67,7 +67,7 @@
                         style="@style/field_column"
                         android:hint="@string/hint_product_name"
                         android:inputType="textCapWords"
-                        android:text="@{product.name}" />
+                        android:text="@={product.name}" />
                 </TableRow>
 
                 <TableRow>
@@ -82,7 +82,7 @@
                         style="@style/field_column"
                         android:hint="@string/hint_price"
                         android:inputType="numberDecimal"
-                        android:text="@{product.getLocalePrice()}" />
+                        android:text="@={product.localizedPrice}" />
                 </TableRow>
 
                 <TableRow>

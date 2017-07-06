@@ -47,6 +47,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -187,6 +190,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     /**
      * Coming back from the image chooser
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -288,8 +292,11 @@ public class EditorActivity extends AppCompatActivity implements
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
-                // If the product hasn't changed, continue with navigating up to parent activity
-                // which is the {@link CatalogActivity}.
+                /**
+                 * If the product hasn't changed, continue with navigating up to parent activity
+                 * which is the {@link CatalogActivity}.
+                 */
+
                 if (!productHasChanged) {
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
                     return true;
@@ -354,20 +361,36 @@ public class EditorActivity extends AppCompatActivity implements
         quantityTextView.setText(String.valueOf(quantity));
     }
 
+    private BigDecimal currencyToBigDecimal(String currency)
+    {
+        // Create a DecimalFormat that fits your requirements
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Config.USER_LOCALE);
+        symbols.setGroupingSeparator(',');
+        symbols.setDecimalSeparator('.');
+        String pattern = "#,##0.0#";
+        DecimalFormat decimalFormat = new DecimalFormat(pattern, symbols);
+        decimalFormat.setParseBigDecimal(true);
+
+        // parse the string
+
+        BigDecimal bigDecimal = null;
+        try {
+            bigDecimal = (BigDecimal) decimalFormat.parse(currency);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return  bigDecimal;
+    }
+
     private boolean persistProduct() {
 
-        //When I get 2 way Databinding working fully, I won't need all this jazz
-        String nameString = productNameEditText.getText().toString().trim();
-        String priceString = priceEditText.getText().toString().trim();
-        String supplierNameString = supplierNameEditText.getText().toString().trim();
-        String supplierEmailString = supplierEmailEditText.getText().toString().trim();
-        String quantityString = quantityTextView.getText().toString();
-        quantityString = product.getQuantity();
-        // Check if this is supposed to be a new product
+         // Check if this is supposed to be a new product
         // and check if all the fields in the editor are blank
         if (isNewProduct() &&
-                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(supplierNameString) && TextUtils.isEmpty(supplierEmailString) &&
+                TextUtils.isEmpty(product.getName()) && product.getPrice() == 0 &&
+                TextUtils.isEmpty(product.getSupplierName())
+                && TextUtils.isEmpty(product.getSupplierMail()) &&
                 imageUri == null) {
             // Since no fields were modified, we can return early without creating a new product.
             // No need to create ContentValues and no need to do any ContentProvider operations.
@@ -376,7 +399,7 @@ public class EditorActivity extends AppCompatActivity implements
         }
 
 
-        if (TextUtils.isEmpty(nameString)) {
+        if (TextUtils.isEmpty(product.getName())) {
             Toast.makeText(this,
                     String.format(
                             getString(R.string.field_is_mandatory),
@@ -386,12 +409,12 @@ public class EditorActivity extends AppCompatActivity implements
         }
 
         ContentValues values = new ContentValues();
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME, nameString);
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, quantityString);
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME, product.getName());
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, product.getQuantity());
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_TARGET_GENDER, 0);
 
 
-        if (TextUtils.isEmpty(priceString)) {
+        if (product.getPrice() == 0) {
             Toast.makeText(this,
                     String.format(
                             getString(R.string.field_is_mandatory),
@@ -399,22 +422,10 @@ public class EditorActivity extends AppCompatActivity implements
                     ), Toast.LENGTH_SHORT).show();
             return false;
         }
-        /**
-         * Strip off the currency before writing to database
-         * Saving with currency works fine, but then reading it again becomes an issue
-         */
-        NumberFormat format = NumberFormat.getCurrencyInstance(Config.USER_LOCALE);
-        Number number = null;
-        try {
-            number = format.parse(priceString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if (number != null)
-            priceString = number.toString();
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE, priceString);
 
-        if (TextUtils.isEmpty(supplierNameString)) {
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE, product.getPrice());
+
+        if (TextUtils.isEmpty(product.getSupplierName())) {
             Toast.makeText(this,
                     String.format(
                             getString(R.string.field_is_mandatory),
@@ -423,9 +434,9 @@ public class EditorActivity extends AppCompatActivity implements
             return false;
         }
 
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, supplierNameString);
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, product.getSupplierName());
 
-        if (TextUtils.isEmpty(supplierEmailString)) {
+        if (TextUtils.isEmpty(product.getSupplierMail())) {
             Toast.makeText(this,
                     String.format(
                             getString(R.string.field_is_mandatory),
@@ -434,7 +445,7 @@ public class EditorActivity extends AppCompatActivity implements
             return false;
         }
 
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, supplierEmailString);
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, product.getSupplierMail());
 
         if (imageUri == null) {
             Toast.makeText(this,
@@ -447,7 +458,7 @@ public class EditorActivity extends AppCompatActivity implements
 
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_IMAGE, imageUri.toString());
 
-        // Determine wheter we need to call
+        // Determine whether we need to call
         // getContentResolver().insert or getContentResolver().update
 
         if (isNewProduct()) {

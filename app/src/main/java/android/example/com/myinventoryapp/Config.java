@@ -14,10 +14,22 @@
 
 package android.example.com.myinventoryapp;
 
+import android.content.Context;
+
+import java.text.NumberFormat;
 import java.util.Locale;
 
 
 
 public  class Config {
     public static final Locale USER_LOCALE = Locale.US;
+    private static String CURRENCY_SYMBOL = "";
+
+    public static String getCurrencySymbol() {
+        if (CURRENCY_SYMBOL.isEmpty()) {
+            CURRENCY_SYMBOL = NumberFormat.getCurrencyInstance(USER_LOCALE).getCurrency().getSymbol();
+        }
+        return CURRENCY_SYMBOL;
+    }
+
 }

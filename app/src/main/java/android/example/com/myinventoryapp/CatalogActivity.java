@@ -116,7 +116,7 @@ public class CatalogActivity extends AppCompatActivity implements
         // and Toto's product attributes are the values.
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, "T-Shirt");
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 5);
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 500);
         String tShirtUri = "android.resource://android.example.com.myinventoryapp/drawable/t_shirt_400";
         values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, tShirtUri);
         values.put(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, "John Doe");

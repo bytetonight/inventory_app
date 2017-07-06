@@ -54,7 +54,8 @@ public class ProductDbHelper extends SQLiteOpenHelper {
         String SQL_CREATE_PRODUCTS_TABLE =  "CREATE TABLE " + ProductEntry.TABLE_NAME + " ("
                 + ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, "
-                + ProductEntry.COLUMN_PRODUCT_PRICE + " TEXT NOT NULL DEFAULT 0, "
+                //Will see what storing prices in cents works out like
+                + ProductEntry.COLUMN_PRODUCT_PRICE + " INTEGER NOT NULL DEFAULT 0, "
                 + ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME + " TEXT, "
                 + ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL + " TEXT, "
                 + ProductEntry.COLUMN_PRODUCT_IMAGE + " TEXT, "

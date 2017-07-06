@@ -33,12 +33,15 @@ public class Product {
 
     private int id;
     private String name;
-    private double price;
+    /**
+     * the price in cents
+     */
+    private int price;
+    private String localizedPrice;
     private String image;
     private String supplierName;
     private String supplierMail;
     private int quantity = 1;
-
 
 
     public Product() {
@@ -47,14 +50,14 @@ public class Product {
 
     public static Product fromCursor(Cursor cursor) {
         Product product = new Product();
-        product.id = Integer.parseInt( cursor.getString(cursor.getColumnIndex(ProductEntry._ID)) );
+        product.id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProductEntry._ID)));
         product.name = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
-        product.price =  Double.parseDouble( cursor.getString(cursor.getColumnIndex(
-                ProductEntry.COLUMN_PRODUCT_PRICE)) );
-        product.image =  cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE));
-        product.supplierName =  cursor.getString(cursor.getColumnIndex(
+        product.price = cursor.getInt(cursor.getColumnIndex(
+                ProductEntry.COLUMN_PRODUCT_PRICE));
+        product.image = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE));
+        product.supplierName = cursor.getString(cursor.getColumnIndex(
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME));
-        product.supplierMail =  cursor.getString(cursor.getColumnIndex(
+        product.supplierMail = cursor.getString(cursor.getColumnIndex(
                 ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL));
 
         product.quantity = cursor.getInt(cursor.getColumnIndex(
@@ -76,14 +79,40 @@ public class Product {
         this.name = name;
     }
 
-    public String getPrice() {
-        return String.valueOf(price);
+    /**
+     * Returns the price in Cents (price/100) as String
+     *
+     * @return
+     */
+    public int getPrice() {
+        return price;
     }
 
-    public String getLocalePrice() {
+    public void setPrice(String p) {
+
+        if (p.contains(Config.getCurrencySymbol())) {
+            p = p.replace(Config.getCurrencySymbol(), "");
+        }
+        if (p.isEmpty()) {
+            price = 0;
+            return;
+        }
+        Double priceDouble = Double.parseDouble(p);
+        //convert currency price to cents as that is what the database stores as integer
+        price = (int) (priceDouble * (double) 100);
+    }
+
+    /**
+     * @return price as String with currency symbol example $2.99
+     */
+    public String getLocalizedPrice() {
         if (price == 0)
             return ""; //This will prevent the App from assuming a new product is an existing one
-        return NumberFormat.getCurrencyInstance(Config.USER_LOCALE).format(price);
+        return NumberFormat.getCurrencyInstance(Config.USER_LOCALE).format(price / 100.0);
+    }
+
+    public void setLocalizedPrice(String localizedPrice) {
+        setPrice(localizedPrice);
     }
 
     public String getImage() {
@@ -121,7 +150,7 @@ public class Product {
 
     /**
      * How this works ?
-     * I've added the attribute app:imageUrl="@{poi.previewImageResourceId}" to the ImageView.
+     * I've added the attribute app:imageUrl="@{product.image}" to the ImageView.
      * For the app namespace to work with my imageUrl attribute, I had to declare the namespace
      * in the layout as follows: xmlns:app="http://schemas.android.com/apk/res-auto"
      * THIS IS A MUST

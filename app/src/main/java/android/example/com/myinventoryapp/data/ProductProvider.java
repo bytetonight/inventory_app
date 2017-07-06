@@ -146,21 +146,19 @@ public class ProductProvider extends ContentProvider {
             throw new IllegalArgumentException("Product requires a name");
         }
 
-        // Check that the gender is valid
+        // Check that the target gender is valid
         Integer gender = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_TARGET_GENDER);
         if (gender == null || !ProductEntry.isValidTargetGender(gender)) {
             throw new IllegalArgumentException("Product requires valid gender");
         }
 
-        // If the weight is provided, check that it's greater than or equal to 0 kg
-        Integer weight = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
-        if (weight != null && weight < 0) {
-            throw new IllegalArgumentException("Product requires valid weight");
+        //Check that quantity is greater 0
+        Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+        if (quantity != null && quantity < 0) {
+            throw new IllegalArgumentException("Product requires valid quantity");
         }
 
-        // No need to check the breed, any value is valid (including null).
 
-        // Get writeable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         // Insert the new product with the given values

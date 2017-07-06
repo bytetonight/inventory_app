@@ -77,7 +77,7 @@
 
                         <TextView
                             style="@style/field_column_2"
-                            android:text="@{product.getLocalePrice()}"
+                            android:text="@{product.localizedPrice}"
                             tools:text="5" />
                     </TableRow>
 
