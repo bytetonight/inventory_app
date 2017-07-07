@@ -54,7 +54,6 @@ public class EditorActivity extends AppCompatActivity implements
     private static final int LOADER_ID = 0;
     private ActivityEditorBinding binding;
     private Product product;
-    private Uri imageUri;
     private Uri productContentUri = null;
     private boolean productHasChanged = false;
 
@@ -68,7 +67,7 @@ public class EditorActivity extends AppCompatActivity implements
         binding = DataBindingUtil.setContentView(this, R.layout.activity_editor);
         binding.setHandlers(new Handlers());
         product = new Product(this);
-        binding.setProduct(product); //Will be set again when the cursor is loaded
+        binding.setProduct(product);
 
         Intent intent = getIntent();
         productContentUri = intent.getData();
@@ -146,7 +145,7 @@ public class EditorActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                imageUri = data.getData();
+                Uri imageUri = data.getData();
                 product.setImage(imageUri.toString());
                 binding.productImageAction.setText(getString(R.string.editor_replace_image_text));
             }
@@ -318,7 +317,7 @@ public class EditorActivity extends AppCompatActivity implements
                 TextUtils.isEmpty(product.getName()) && product.getPrice() == 0 &&
                 TextUtils.isEmpty(product.getSupplierName())
                 && TextUtils.isEmpty(product.getSupplierMail()) &&
-                imageUri == null) {
+                TextUtils.isEmpty(product.getImage())) {
             // Since no fields were modified, we can return early without creating a new product.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             finish();
@@ -374,7 +373,7 @@ public class EditorActivity extends AppCompatActivity implements
 
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, product.getSupplierMail());
 
-        if (imageUri == null) {
+        if (TextUtils.isEmpty(product.getImage())) {
             Toast.makeText(this,
                     String.format(
                             getString(R.string.field_is_mandatory),
@@ -383,7 +382,7 @@ public class EditorActivity extends AppCompatActivity implements
             return false;
         }
 
-        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_IMAGE, imageUri.toString());
+        values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_IMAGE, product.getImage());
 
         // Determine whether we need to call
         // getContentResolver().insert or getContentResolver().update
@@ -504,8 +503,6 @@ public class EditorActivity extends AppCompatActivity implements
             // Find the columns of product attributes that we're interested in
             // Moved to Product Model
             product = Product.fromCursor(this, cursor);
-            //quantity = Integer.parseInt(product.getQuantity());
-            imageUri = Uri.parse(product.getImage());
             binding.setProduct(product);
         }
     }
