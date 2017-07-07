@@ -39,18 +39,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -62,33 +55,10 @@ public class EditorActivity extends AppCompatActivity implements
     private ActivityEditorBinding binding;
     private Product product;
     private Uri imageUri;
-    private Button productImageAction;
-    private ImageView productImage;
-    private ImageView btnAdd;
-    private ImageView btnRemove;
-    private EditText productNameEditText;
-    private EditText priceEditText;
-    private EditText supplierNameEditText;
-    private EditText supplierEmailEditText;
-    private TextView quantityTextView;
-
-    private int quantity;
     private Uri productContentUri = null;
-
     private boolean productHasChanged = false;
 
-    private View.OnTouchListener formElementOnTouchListener = new View.OnTouchListener() {
 
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            productHasChanged = true;
-            /*if (v.getId() == R.id.btn_remove)
-                decreaseQuantity();
-            if (v.getId() == R.id.btn_add)
-                increaseQuantity();*/
-            return false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,29 +73,15 @@ public class EditorActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         productContentUri = intent.getData();
 
-        productImage = (ImageView) findViewById(R.id.product_image);
-        productImageAction = (Button) findViewById(R.id.product_image_action);
-
-
-
         if (isNewProduct()) {
             setTitle(getString(R.string.editor_title_add_product));
-            productImageAction.setText(getString(R.string.editor_add_image_text));
+            binding.productImageAction.setText(getString(R.string.editor_add_image_text));
             invalidateOptionsMenu();
         } else {
             setTitle(getString(R.string.editor_title_edit_product));
-            productImageAction.setText(getString(R.string.editor_replace_image_text));
+            binding.productImageAction.setText(getString(R.string.editor_replace_image_text));
             getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         }
-
-
-        productImageAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                trySelector();
-                productHasChanged = true;
-            }
-        });
     }
 
     /**
@@ -192,8 +148,7 @@ public class EditorActivity extends AppCompatActivity implements
             if (data != null) {
                 imageUri = data.getData();
                 product.setImage(imageUri.toString());
-                binding.setProduct(product);
-                productImageAction.setText(getString(R.string.editor_replace_image_text));
+                binding.productImageAction.setText(getString(R.string.editor_replace_image_text));
             }
         }
     }
@@ -315,12 +270,12 @@ public class EditorActivity extends AppCompatActivity implements
     public void requestStock() {
         Intent intent = new Intent(android.content.Intent.ACTION_SENDTO);
         intent.setType("text/plain");
-        intent.setData(Uri.parse("mailto:" + supplierEmailEditText.getText().toString().trim()));
+        intent.setData(Uri.parse("mailto:" + product.getSupplierMail().trim()));
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.product_request_subject));
 
         String msg = String.format(
                 getString(R.string.product_request_message),
-                productNameEditText.getText().toString().trim());
+                product.getName().trim());
         intent.putExtra(android.content.Intent.EXTRA_TEXT, msg);
 
         if (isResolvedActivity(intent))
@@ -549,7 +504,7 @@ public class EditorActivity extends AppCompatActivity implements
             // Find the columns of product attributes that we're interested in
             // Moved to Product Model
             product = Product.fromCursor(this, cursor);
-            quantity = Integer.parseInt(product.getQuantity());
+            //quantity = Integer.parseInt(product.getQuantity());
             imageUri = Uri.parse(product.getImage());
             binding.setProduct(product);
         }

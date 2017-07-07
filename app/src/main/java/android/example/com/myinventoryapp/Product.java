@@ -42,9 +42,9 @@ public class Product extends BaseObservable {
      */
     private int price;
     private String localizedPrice;
-    private String image;
-    private String supplierName;
-    private String supplierMail;
+    private String image = "";
+    private String supplierName = "";
+    private String supplierMail = "";
     private int quantity = 1;
 
 
@@ -135,12 +135,15 @@ public class Product extends BaseObservable {
         }
     }
 
+    @Bindable
     public String getImage() {
         return image;
     }
 
     public void setImage(String image) {
         this.image = image;
+        notifyPropertyChanged(android.example.com.myinventoryapp.BR.image);
+        raisePropertyChangedEvent("image");
     }
 
     public String getSupplierName() {

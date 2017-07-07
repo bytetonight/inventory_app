@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2017. bytetonight@gmail.com
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,14 +36,15 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:id="@+id/product_image"
                 style="@style/editor_image"
-                app:imageUrl="@{product.image}" />
+                android:src="@{product.image}" />
+            <!--app:imageUrl="@{product.image}"-->
 
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/product_image_action"
                 style="@style/editor_btn_image_action"
+                android:onClick="@{(v) -> handlers.productImageAction(v)}"
                 android:text="@string/editor_add_image_text"
                 app:backgroundTint="@color/colorPrimaryDark" />
 
@@ -63,7 +63,6 @@
                         tools:text="@string/label_product_name" />
 
                     <EditText
-                        android:id="@+id/edit_product_name"
                         style="@style/field_column"
                         android:hint="@string/hint_product_name"
                         android:inputType="textCapWords"
@@ -78,7 +77,6 @@
                         tools:text="@string/label_product_price" />
 
                     <EditText
-                        android:id="@+id/edit_product_price"
                         style="@style/field_column"
                         android:hint="@string/hint_price"
                         android:inputType="numberDecimal"
@@ -93,7 +91,6 @@
                         tools:text="@string/label_supplier_name" />
 
                     <EditText
-                        android:id="@+id/supplier_name"
                         style="@style/field_column"
                         android:hint="@string/hint_supplier_name"
                         android:inputType="textCapCharacters"
@@ -108,7 +105,6 @@
                         tools:text="@string/label_supplier_email" />
 
                     <EditText
-                        android:id="@+id/supplier_email"
                         style="@style/field_column"
                         android:hint="@string/hint_supplier_email"
                         android:inputType="textCapCharacters"
@@ -122,20 +118,17 @@
         <LinearLayout style="@style/editor_quantity_btn_container">
 
             <ImageView
-                android:id="@+id/btn_remove"
                 style="@style/editor_quantity_btn"
                 android:onClick="@{() -> handlers.changeQuantity(product, false)}"
                 android:src="@drawable/ic_remove_circle_outline_white_36dp" />
 
 
             <TextView
-                android:id="@+id/edit_quantity_text_view"
                 style="@style/editor_quantity_field"
                 android:text="@={product.quantity}"
                 tools:text="5" />
 
             <ImageView
-                android:id="@+id/btn_add"
                 style="@style/editor_quantity_btn"
                 android:onClick="@{() -> handlers.changeQuantity(product, true)}"
                 android:src="@drawable/ic_add_circle_outline_white_36dp" />

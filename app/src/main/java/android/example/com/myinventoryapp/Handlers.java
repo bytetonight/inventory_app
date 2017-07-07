@@ -14,9 +14,11 @@
 
 package android.example.com.myinventoryapp;
 
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.example.com.myinventoryapp.data.ProductContract;
 import android.net.Uri;
@@ -76,5 +78,30 @@ public class Handlers {
             product.decQuantity();
     }
 
+    public void productImageAction(View v) {
+        //The workaround I am using here comes from
+        //https://stackoverflow.com/questions/37196284/android-support-library-23-4-0-android-support-v7-widget-tintcontextwrapper-can
+        EditorActivity editorActivity = (EditorActivity) getRequiredActivity(v);
+        editorActivity.trySelector();
+        //Would have been nice but
+        /**
+         * your Activities extend AppCompatActivity.
+         * Since Support library version 23.3.0 View.getContext() returns a TintContextWrapper
+         * object instead of an Activity. You can extract the Activity as described
+         * here: https://stackoverflow.com/a/32973351/6009935
+         */
+        //((EditorActivity)v.getContext()).trySelector();
+    }
 
+
+    private Activity getRequiredActivity(View req_view) {
+        Context context = req_view.getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
+    }
 }
