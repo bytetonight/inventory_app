@@ -17,17 +17,20 @@ package android.example.com.myinventoryapp;
 import android.content.Context;
 
 import java.text.NumberFormat;
+import java.util.Currency;
 import java.util.Locale;
 
 
 
 public  class Config {
-    public static final Locale USER_LOCALE = Locale.US;
+    public static final Locale USER_LOCALE = Locale.GERMANY;
     private static String CURRENCY_SYMBOL = "";
 
     public static String getCurrencySymbol() {
         if (CURRENCY_SYMBOL.isEmpty()) {
-            CURRENCY_SYMBOL = NumberFormat.getCurrencyInstance(USER_LOCALE).getCurrency().getSymbol();
+            Currency currency = Currency.getInstance(USER_LOCALE);
+            CURRENCY_SYMBOL = currency.getSymbol();
+            //CURRENCY_SYMBOL = NumberFormat.getCurrencyInstance(USER_LOCALE).getCurrency().getSymbol();
         }
         return CURRENCY_SYMBOL;
     }

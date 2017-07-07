@@ -67,8 +67,13 @@ public class Handlers {
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
 
         int rowsEffected = context.getContentResolver().update(currentProductUri, values, null, null);
+    }
 
-
+    public void changeQuantity(Product product, boolean up) {
+        if (up)
+            product.incQuantity();
+        else
+            product.decQuantity();
     }
 
 

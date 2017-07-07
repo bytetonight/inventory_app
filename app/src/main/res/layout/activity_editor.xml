@@ -124,6 +124,7 @@
             <ImageView
                 android:id="@+id/btn_remove"
                 style="@style/editor_quantity_btn"
+                android:onClick="@{() -> handlers.changeQuantity(product, false)}"
                 android:src="@drawable/ic_remove_circle_outline_white_36dp" />
 
 
@@ -136,6 +137,7 @@
             <ImageView
                 android:id="@+id/btn_add"
                 style="@style/editor_quantity_btn"
+                android:onClick="@{() -> handlers.changeQuantity(product, true)}"
                 android:src="@drawable/ic_add_circle_outline_white_36dp" />
 
         </LinearLayout>

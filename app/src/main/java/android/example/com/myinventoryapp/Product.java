@@ -14,7 +14,10 @@
 
 package android.example.com.myinventoryapp;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.example.com.myinventoryapp.data.ProductContract.ProductEntry;
@@ -29,8 +32,9 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 
 
-public class Product {
+public class Product extends BaseObservable {
 
+    private ProductMonitor productMonitor;
     private int id;
     private String name;
     /**
@@ -48,8 +52,12 @@ public class Product {
 
     }
 
-    public static Product fromCursor(Cursor cursor) {
-        Product product = new Product();
+    public Product(Context context) {
+        productMonitor = (ProductMonitor) context;
+    }
+
+    public static Product fromCursor(Context context, Cursor cursor) {
+        Product product = new Product(context);
         product.id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProductEntry._ID)));
         product.name = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
         product.price = cursor.getInt(cursor.getColumnIndex(
@@ -76,7 +84,10 @@ public class Product {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (!name.equals(this.name)) {
+            raisePropertyChangedEvent("name");
+            this.name = name;
+        }
     }
 
     /**
@@ -89,17 +100,23 @@ public class Product {
     }
 
     public void setPrice(String p) {
-
-        if (p.contains(Config.getCurrencySymbol())) {
+        p = p.replaceAll("[^0-9.,]+","");
+        p = p.replaceAll("[,]+",".");
+        /*if (p.contains(Config.getCurrencySymbol())) {
             p = p.replace(Config.getCurrencySymbol(), "");
-        }
+        }*/
+
         if (p.isEmpty()) {
             price = 0;
             return;
         }
         Double priceDouble = Double.parseDouble(p);
         //convert currency price to cents as that is what the database stores as integer
-        price = (int) (priceDouble * (double) 100);
+        int tempPrice = (int) (priceDouble * (double) 100);
+        if (tempPrice != price) {
+            raisePropertyChangedEvent("price");
+            price = tempPrice;
+        }
     }
 
     /**
@@ -113,6 +130,9 @@ public class Product {
 
     public void setLocalizedPrice(String localizedPrice) {
         setPrice(localizedPrice);
+        if (!localizedPrice.equals(getLocalizedPrice())) {
+            raisePropertyChangedEvent("localizedPrice");
+        }
     }
 
     public String getImage() {
@@ -128,7 +148,11 @@ public class Product {
     }
 
     public void setSupplierName(String supplierName) {
-        this.supplierName = supplierName;
+
+        if (!this.supplierName.equals(supplierName)) {
+            raisePropertyChangedEvent("supplierName");
+            this.supplierName = supplierName;
+        }
     }
 
     public String getSupplierMail() {
@@ -136,16 +160,25 @@ public class Product {
     }
 
     public void setSupplierMail(String supplierMail) {
-        this.supplierMail = supplierMail;
+        if (!this.supplierMail.equals(supplierMail)) {
+            this.supplierMail = supplierMail;
+            raisePropertyChangedEvent("supplierName");
+        }
     }
 
+    @Bindable
     public String getQuantity() {
         return String.valueOf(quantity);
     }
 
     public void setQuantity(String quantity) {
-        if (!quantity.isEmpty())
-            this.quantity = Integer.parseInt(quantity);
+        if (!quantity.isEmpty()) {
+            int tempQuantity = Integer.parseInt(quantity);;
+            if (tempQuantity != this.quantity) {
+                this.quantity = tempQuantity;
+                raisePropertyChangedEvent("quantity");
+            }
+        }
     }
 
     /**
@@ -166,5 +199,23 @@ public class Product {
     public static void getProductImage(ImageView imageView, String previewImgResourceId) {
         Glide.with(imageView.getContext()).load(previewImgResourceId).into(imageView);
     }
+
+    public void incQuantity() {
+        ++quantity;
+        notifyPropertyChanged(android.example.com.myinventoryapp.BR.quantity);
+    }
+
+    public void decQuantity() {
+        if (quantity > 1) {
+            --quantity;
+            notifyPropertyChanged(android.example.com.myinventoryapp.BR.quantity);
+        }
+    }
+
+    private void raisePropertyChangedEvent(String which) {
+        if (productMonitor != null)
+            productMonitor.onPropertyChanged(which);
+    }
+
 
 }

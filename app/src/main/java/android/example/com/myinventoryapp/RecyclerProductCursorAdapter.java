@@ -53,7 +53,7 @@ public class RecyclerProductCursorAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
 
-        Product product = Product.fromCursor(cursor);
+        Product product = Product.fromCursor(null, cursor);
         holder.bind(product);
     }
 

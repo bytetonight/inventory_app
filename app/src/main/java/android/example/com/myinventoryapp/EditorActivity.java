@@ -52,10 +52,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 
 public class EditorActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, ProductMonitor {
 
     private static final int LOADER_ID = 0;
     private ActivityEditorBinding binding;
@@ -81,10 +82,10 @@ public class EditorActivity extends AppCompatActivity implements
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             productHasChanged = true;
-            if (v.getId() == R.id.btn_remove)
+            /*if (v.getId() == R.id.btn_remove)
                 decreaseQuantity();
             if (v.getId() == R.id.btn_add)
-                increaseQuantity();
+                increaseQuantity();*/
             return false;
         }
     };
@@ -92,10 +93,11 @@ public class EditorActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Locale.setDefault(Config.USER_LOCALE);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_editor);
-        product = new Product();
+        binding.setHandlers(new Handlers());
+        product = new Product(this);
         binding.setProduct(product); //Will be set again when the cursor is loaded
 
         Intent intent = getIntent();
@@ -103,13 +105,7 @@ public class EditorActivity extends AppCompatActivity implements
 
         productImage = (ImageView) findViewById(R.id.product_image);
         productImageAction = (Button) findViewById(R.id.product_image_action);
-        productNameEditText = (EditText) findViewById(R.id.edit_product_name);
-        priceEditText = (EditText) findViewById(R.id.edit_product_price);
-        supplierNameEditText = (EditText) findViewById(R.id.supplier_name);
-        supplierEmailEditText = (EditText) findViewById(R.id.supplier_email);
-        quantityTextView = (TextView) findViewById(R.id.edit_quantity_text_view);
-        btnAdd = (ImageView) findViewById(R.id.btn_add);
-        btnRemove = (ImageView) findViewById(R.id.btn_remove);
+
 
 
         if (isNewProduct()) {
@@ -122,12 +118,7 @@ public class EditorActivity extends AppCompatActivity implements
             getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         }
 
-        productNameEditText.setOnTouchListener(formElementOnTouchListener);
-        priceEditText.setOnTouchListener(formElementOnTouchListener);
-        supplierNameEditText.setOnTouchListener(formElementOnTouchListener);
-        supplierEmailEditText.setOnTouchListener(formElementOnTouchListener);
-        btnRemove.setOnTouchListener(formElementOnTouchListener);
-        btnAdd.setOnTouchListener(formElementOnTouchListener);
+
         productImageAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -340,25 +331,6 @@ public class EditorActivity extends AppCompatActivity implements
 
     private boolean isResolvedActivity(Intent intent) {
         return intent.resolveActivityInfo(getPackageManager(), 0) != null;
-    }
-
-    private void increaseQuantity() {
-        ++quantity;
-        displayQuantity();
-    }
-
-    private void decreaseQuantity() {
-        if (quantity == 0) {
-            Toast.makeText(this, getString(R.string.negative_quantity_notice),
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            --quantity;
-            displayQuantity();
-        }
-    }
-
-    public void displayQuantity() {
-        quantityTextView.setText(String.valueOf(quantity));
     }
 
     private BigDecimal currencyToBigDecimal(String currency)
@@ -576,7 +548,7 @@ public class EditorActivity extends AppCompatActivity implements
         if (cursor.moveToFirst()) {
             // Find the columns of product attributes that we're interested in
             // Moved to Product Model
-            product = Product.fromCursor(cursor);
+            product = Product.fromCursor(this, cursor);
             quantity = Integer.parseInt(product.getQuantity());
             imageUri = Uri.parse(product.getImage());
             binding.setProduct(product);
@@ -589,4 +561,9 @@ public class EditorActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void onPropertyChanged(String property) {
+        productHasChanged = true;
+        //Toast.makeText(this, property+" changed", Toast.LENGTH_SHORT).show();
+    }
 }
