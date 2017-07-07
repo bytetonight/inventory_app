@@ -55,6 +55,11 @@ public class EditorActivity extends AppCompatActivity implements
     private ActivityEditorBinding binding;
     private Product product;
     private Uri productContentUri = null;
+    /**
+     * I could just as well query my model
+     * example if ( product.propertyChanged )
+     * but for now I'll let my product tell the Activity that a change occurred in the model
+     */
     private boolean productHasChanged = false;
 
 
@@ -89,7 +94,7 @@ public class EditorActivity extends AppCompatActivity implements
      *
      * @return true if ContentUri is null, otherwise false
      */
-    public boolean isNewProduct() {
+    private boolean isNewProduct() {
         return productContentUri == null;
     }
 
@@ -266,7 +271,7 @@ public class EditorActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void requestStock() {
+    private void requestStock() {
         Intent intent = new Intent(android.content.Intent.ACTION_SENDTO);
         intent.setType("text/plain");
         intent.setData(Uri.parse("mailto:" + product.getSupplierMail().trim()));
