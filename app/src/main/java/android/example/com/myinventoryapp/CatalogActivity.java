@@ -179,8 +179,8 @@ public class CatalogActivity extends AppCompatActivity implements
                 ProductEntry.COLUMN_PRODUCT_TARGET_GENDER,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY};
 
-        String selection = null;//ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
-        String[] selectionArgs = null;//{"%shirt%"};
+        String selection = ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
+        String[] selectionArgs = {"%shirt%"};
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
                 ProductEntry.CONTENT_URI,   // Provider content URI to query
