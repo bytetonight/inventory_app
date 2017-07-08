@@ -185,8 +185,8 @@ public class CatalogActivity extends AppCompatActivity implements
         return new CursorLoader(this,   // Parent activity context
                 ProductEntry.CONTENT_URI,   // Provider content URI to query
                 projection,             // Columns to include in the resulting Cursor
-                selection,              // No selection clause
-                selectionArgs,          // No selection arguments
+                selection,              // Now using selection clause
+                selectionArgs,          // Now using selection arguments
                 null);                  // Default sort order
     }
 
