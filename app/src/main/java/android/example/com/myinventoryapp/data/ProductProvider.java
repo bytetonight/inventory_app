@@ -38,6 +38,8 @@ public class ProductProvider extends ContentProvider {
     /** URI matcher code for the content URI for a single product in the products table */
     private static final int PRODUCT_ID = 101;
 
+    private static final int PRODUCT_NAME = 201;
+
     /**
      * UriMatcher object to match a content URI to a corresponding code.
      * The input passed into the constructor represents the code to return for the root URI.
@@ -64,6 +66,10 @@ public class ProductProvider extends ContentProvider {
         // For example, "content://com.virtual.warehouse/products/3" matches, but
         // "content://com.virtual.warehouse/products" (without a number at the end) doesn't match.
         productUriMatcher.addURI(ProductContract.CONTENT_AUTHORITY, ProductContract.PATH_PRODUCTS + "/#", PRODUCT_ID);
+
+        //The * Wildcard apparently stands for any text
+        productUriMatcher.addURI(ProductContract.CONTENT_AUTHORITY,
+                ProductContract.PATH_PRODUCTS + "/*", PRODUCT_NAME);
     }
 
     /** Database helper object */
@@ -108,6 +114,14 @@ public class ProductProvider extends ContentProvider {
 
                 // This will perform a query on the products table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
+                cursor = database.query(ProductEntry.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
+                break;
+
+            //No idea if this is going to be needed somehow
+            case PRODUCT_NAME:
+                selection = ProductEntry.COLUMN_PRODUCT_NAME + "=?";
+                selectionArgs = new String[] { "%" + String.valueOf(ContentUris.parseId(uri)) + "%"};
                 cursor = database.query(ProductEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;

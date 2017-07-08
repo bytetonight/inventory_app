@@ -43,6 +43,8 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+import static android.R.attr.data;
+
 /**
  * Displays list of products that were entered and stored in the app.
  */
@@ -177,13 +179,14 @@ public class CatalogActivity extends AppCompatActivity implements
                 ProductEntry.COLUMN_PRODUCT_TARGET_GENDER,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY};
 
-
+        String selection = ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
+        String[] selectionArgs = {"%shirt%"};
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
                 ProductEntry.CONTENT_URI,   // Provider content URI to query
                 projection,             // Columns to include in the resulting Cursor
-                null,                   // No selection clause
-                null,                   // No selection arguments
+                selection,              // No selection clause
+                selectionArgs,          // No selection arguments
                 null);                  // Default sort order
     }
 

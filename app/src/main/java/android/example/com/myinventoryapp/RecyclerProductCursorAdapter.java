@@ -36,7 +36,7 @@ public class RecyclerProductCursorAdapter
 
     public RecyclerProductCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor);
-
+        setHasStableIds(true);
     }
 
     @Override
