@@ -99,18 +99,25 @@ public class Product extends BaseObservable {
         return price;
     }
 
-    public void setPrice(String p) {
-        p = p.replaceAll("[^0-9.,]+","");
-        p = p.replaceAll("[,]+",".");
+    /**
+     *
+     * @param priceString is the String coming from the price EditText
+     */
+    public void setPrice(String priceString) {
+        //The commented out code works with various currencies but if
+        //I use Local.GERMANY, priceString will contain an unknown character, just not the €
+        //which is not replaced, and which will cause the cast to Double to fail
+        priceString = priceString.replaceAll("[^0-9.,]+","");
+        priceString = priceString.replaceAll("[,]+",".");
         /*if (p.contains(Config.getCurrencySymbol())) {
             p = p.replace(Config.getCurrencySymbol(), "");
         }*/
 
-        if (p.isEmpty()) {
+        if (priceString.isEmpty()) {
             price = 0;
             return;
         }
-        Double priceDouble = Double.parseDouble(p);
+        Double priceDouble = Double.parseDouble(priceString);
         //convert currency price to cents as that is what the database stores as integer
         int tempPrice = (int) (priceDouble * (double) 100);
         if (tempPrice != price) {
@@ -124,7 +131,7 @@ public class Product extends BaseObservable {
      */
     public String getLocalizedPrice() {
         if (price == 0)
-            return ""; //This will prevent the App from assuming a new product is an existing one
+            return null; //This will prevent the App from assuming a new product is an existing one
         return NumberFormat.getCurrencyInstance(Config.USER_LOCALE).format(price / 100.0);
     }
 
