@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017. bytetonight@gmail.com
+ * Copyright (c) 2017 bytetonight@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package android.example.com.myinventoryapp;
+package android.example.com.myinventoryapp.action_handlers;
 
 import android.app.Activity;
 import android.content.ContentUris;
@@ -20,7 +20,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.example.com.myinventoryapp.EditorActivity;
 import android.example.com.myinventoryapp.data.ProductContract;
+import android.example.com.myinventoryapp.models.Product;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;

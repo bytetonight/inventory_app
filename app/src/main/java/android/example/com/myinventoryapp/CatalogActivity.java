@@ -14,16 +14,12 @@
 
 package android.example.com.myinventoryapp;
 
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
+import android.example.com.myinventoryapp.adapters.RecyclerProductCursorAdapter;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.app.LoaderManager;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -36,12 +32,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.example.com.myinventoryapp.data.ProductContract.ProductEntry;
 import android.widget.Toast;
-
-import java.util.Locale;
 
 /**
  * Displays list of products that were entered and stored in the app.

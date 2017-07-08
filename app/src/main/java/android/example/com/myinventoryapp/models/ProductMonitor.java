@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package android.example.com.myinventoryapp;
+package android.example.com.myinventoryapp.models;
 
 /**
  * Created by ByteTonight on 06.07.2017.

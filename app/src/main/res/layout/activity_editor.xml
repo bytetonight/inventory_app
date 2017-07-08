@@ -18,11 +18,11 @@
 
         <variable
             name="handlers"
-            type="android.example.com.myinventoryapp.Handlers" />
+            type="android.example.com.myinventoryapp.action_handlers.Handlers" />
 
         <variable
             name="product"
-            type="android.example.com.myinventoryapp.Product" />
+            type="android.example.com.myinventoryapp.models.Product" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

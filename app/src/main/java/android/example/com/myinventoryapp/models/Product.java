@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017. bytetonight@gmail.com
+ * Copyright (c) 2017 bytetonight@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,24 +12,20 @@
  * limitations under the License.
  */
 
-package android.example.com.myinventoryapp;
+package android.example.com.myinventoryapp.models;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
-import android.databinding.InverseBindingAdapter;
+import android.example.com.myinventoryapp.config.Config;
 import android.example.com.myinventoryapp.data.ProductContract.ProductEntry;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
 
 
 public class Product extends BaseObservable {

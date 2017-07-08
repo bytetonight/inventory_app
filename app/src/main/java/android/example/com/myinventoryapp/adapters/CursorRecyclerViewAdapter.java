@@ -15,7 +15,7 @@
  *
  */
 
-package android.example.com.myinventoryapp;
+package android.example.com.myinventoryapp.adapters;
 
 
 import android.content.Context;
