@@ -54,18 +54,35 @@ public class Product extends BaseObservable {
 
     public static Product fromCursor(Context context, Cursor cursor) {
         Product product = new Product(context);
-        product.id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProductEntry._ID)));
-        product.name = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
-        product.price = cursor.getInt(cursor.getColumnIndex(
-                ProductEntry.COLUMN_PRODUCT_PRICE));
-        product.image = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE));
-        product.supplierName = cursor.getString(cursor.getColumnIndex(
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME));
-        product.supplierMail = cursor.getString(cursor.getColumnIndex(
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL));
+        int idIndex = cursor.getColumnIndex(ProductEntry._ID);
+        int nameIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
+        int priceIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
+        int imageIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE);
+        int supplierNameIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME);
+        int supplierEmailIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
+        int quantityIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
 
-        product.quantity = cursor.getInt(cursor.getColumnIndex(
-                ProductEntry.COLUMN_PRODUCT_QUANTITY));
+        //Check if the columns actually exist
+        if (idIndex > -1)
+            product.id = Integer.parseInt(cursor.getString(idIndex));
+
+        if (nameIndex > -1)
+            product.name = cursor.getString(nameIndex);
+
+        if (priceIndex > -1)
+            product.price = cursor.getInt(priceIndex);
+
+        if (imageIndex > -1)
+            product.image = cursor.getString(imageIndex);
+
+        if (supplierNameIndex > -1)
+            product.supplierName = cursor.getString(supplierNameIndex);
+
+        if (supplierEmailIndex > -1)
+            product.supplierMail = cursor.getString(supplierEmailIndex);
+
+        if (quantityIndex > -1)
+            product.quantity = cursor.getInt(quantityIndex);
 
 
         return product;

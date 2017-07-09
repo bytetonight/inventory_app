@@ -164,9 +164,6 @@ public class CatalogActivity extends AppCompatActivity implements
                 ProductEntry.COLUMN_PRODUCT_NAME,
                 ProductEntry.COLUMN_PRODUCT_PRICE,
                 ProductEntry.COLUMN_PRODUCT_IMAGE,
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME,
-                ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL,
-                ProductEntry.COLUMN_PRODUCT_TARGET_GENDER,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY};
 
 
