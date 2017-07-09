@@ -217,8 +217,11 @@ public class EditorActivity extends AppCompatActivity implements
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         // If this is a new product, hide the "Delete" menu item.
+        // AND the order more item
         if (productContentUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+            menuItem = menu.findItem(R.id.order_more);
             menuItem.setVisible(false);
         }
         return true;
