@@ -36,6 +36,7 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
+                android:id="@+id/product_imageView"
                 style="@style/editor_image"
                 android:src="@{product.image}" />
             <!--app:imageUrl="@{product.image}"-->

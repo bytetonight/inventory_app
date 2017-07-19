@@ -532,6 +532,7 @@ public class EditorActivity extends AppCompatActivity implements
             // Moved to Product Model
             product = Product.fromCursor(this, cursor);
             binding.setProduct(product);
+            binding.productImageView.invalidate(); //clear cache of ImageView
         }
     }
 
