@@ -323,78 +323,24 @@ public class EditorActivity extends AppCompatActivity implements
 
     private boolean persistProduct() {
 
-         // Check if this is supposed to be a new product
-        // and check if all the fields in the editor are blank
-        if (isNewProduct() &&
-                TextUtils.isEmpty(product.getName()) && product.getPrice() == 0 &&
-                TextUtils.isEmpty(product.getSupplierName())
-                && TextUtils.isEmpty(product.getSupplierMail()) &&
-                TextUtils.isEmpty(product.getImage())) {
-            // Since no fields were modified, we can return early without creating a new product.
-            // No need to create ContentValues and no need to do any ContentProvider operations.
-            finish();
+        /**
+         * Passing !isValidFormData() means the input was Ok
+         */
+        if (!isValidFormData())
             return false;
-        }
 
-
-        if (TextUtils.isEmpty(product.getName())) {
-            Toast.makeText(this,
-                    String.format(
-                            getString(R.string.field_is_mandatory),
-                            getString(R.string.label_product_name)
-                    ), Toast.LENGTH_SHORT).show();
-            return false;
-        }
 
         ContentValues values = new ContentValues();
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME, product.getName());
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, product.getQuantity());
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_TARGET_GENDER, 0);
-
-
-        if (product.getPrice() == 0) {
-            Toast.makeText(this,
-                    String.format(
-                            getString(R.string.field_is_mandatory),
-                            getString(R.string.label_product_price)
-                    ), Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE, product.getPrice());
-
-        if (TextUtils.isEmpty(product.getSupplierName())) {
-            Toast.makeText(this,
-                    String.format(
-                            getString(R.string.field_is_mandatory),
-                            getString(R.string.label_supplier_name)
-                    ), Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER_NAME, product.getSupplierName());
-
-        if (TextUtils.isEmpty(product.getSupplierMail())) {
-            Toast.makeText(this,
-                    String.format(
-                            getString(R.string.field_is_mandatory),
-                            getString(R.string.label_supplier_email)
-                    ), Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, product.getSupplierMail());
-
-        if (TextUtils.isEmpty(product.getImage())) {
-            Toast.makeText(this,
-                    String.format(
-                            getString(R.string.field_is_mandatory),
-                            getString(R.string.label_product_image)
-                    ), Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_IMAGE, product.getImage());
+
+
+
 
         // Determine whether we need to call
         // getContentResolver().insert or getContentResolver().update
@@ -434,6 +380,76 @@ public class EditorActivity extends AppCompatActivity implements
                 }
             }
         }
+        return true;
+    }
+
+    /**
+     * Low level sanity checks and notifications when a field does not meet the requirements
+     * @return true if all fields meet requirements, else false
+     */
+    private boolean isValidFormData() {
+        // Check if this is supposed to be a new product
+        // and check if all the fields in the editor are blank
+        if (isNewProduct() &&
+                TextUtils.isEmpty(product.getName()) && product.getPrice() == 0 &&
+                TextUtils.isEmpty(product.getSupplierName())
+                && TextUtils.isEmpty(product.getSupplierMail()) &&
+                TextUtils.isEmpty(product.getImage())) {
+            // Since no fields were modified, we can return early without creating a new product.
+            // No need to create ContentValues and no need to do any ContentProvider operations.
+            finish();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(product.getName())) {
+            Toast.makeText(this,
+                    String.format(
+                            getString(R.string.field_is_mandatory),
+                            getString(R.string.label_product_name)
+                    ), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (product.getPrice() == 0) {
+            Toast.makeText(this,
+                    String.format(
+                            getString(R.string.field_is_mandatory),
+                            getString(R.string.label_product_price)
+                    ), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(product.getSupplierName())) {
+            Toast.makeText(this,
+                    String.format(
+                            getString(R.string.field_is_mandatory),
+                            getString(R.string.label_supplier_name)
+                    ), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+
+
+        if (TextUtils.isEmpty(product.getSupplierMail())) {
+            Toast.makeText(this,
+                    String.format(
+                            getString(R.string.field_is_mandatory),
+                            getString(R.string.label_supplier_email)
+                    ), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+
+
+        if (TextUtils.isEmpty(product.getImage())) {
+            Toast.makeText(this,
+                    String.format(
+                            getString(R.string.field_is_mandatory),
+                            getString(R.string.label_product_image)
+                    ), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         return true;
     }
 
