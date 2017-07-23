@@ -102,18 +102,9 @@ public class EditorActivity extends AppCompatActivity implements
         return productContentUri == null;
     }
 
-    public void trySelector() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
-            return;
-        }
-        openSelector();
-    }
 
-    private void openSelector() {
+
+    public void openImageChooser() {
         Intent intent;
         if (Build.VERSION.SDK_INT < 19) {
             intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -126,22 +117,7 @@ public class EditorActivity extends AppCompatActivity implements
             startActivityForResult(Intent.createChooser(intent, getString(R.string.intent_select_image)), 0);
     }
 
-    /**
-     * This interface is the contract for receiving the results for permission requests.
-     *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openSelector();
-                }
-        }
-    }
+
 
     /**
      * Coming back from the image chooser
@@ -152,11 +128,29 @@ public class EditorActivity extends AppCompatActivity implements
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
+
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            try {
                 Uri imageUri = data.getData();
-                product.setImage(imageUri.toString());
-                binding.productImageAction.setText(getString(R.string.editor_replace_image_text));
+                int takeFlags = data.getFlags();
+                takeFlags &= (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+                try {
+                    getContentResolver().takePersistableUriPermission(imageUri, takeFlags);
+                    product.setImage(imageUri.toString());
+                    binding.productImageAction.setText(getString(R.string.editor_replace_image_text));
+                }
+                catch (SecurityException e){
+                    e.printStackTrace();
+                }
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

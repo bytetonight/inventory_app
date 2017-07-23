@@ -16,8 +16,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="android.example.com.myinventoryapp">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -43,7 +42,8 @@
         <provider
             android:name=".data.ProductProvider"
             android:authorities="com.bytetonight.warehouse"
-            android:exported="false" />
+            android:exported="false"
+            android:grantUriPermissions="true"/>
 
     </application>
 

@@ -84,7 +84,7 @@ public class Handlers {
         //The workaround I am using here comes from
         //https://stackoverflow.com/questions/37196284/android-support-library-23-4-0-android-support-v7-widget-tintcontextwrapper-can
         EditorActivity editorActivity = (EditorActivity) getRequiredActivity(v);
-        editorActivity.trySelector();
+        editorActivity.openImageChooser();
         //Would have been nice but
         /**
          * your Activities extend AppCompatActivity.
