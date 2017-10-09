@@ -15,6 +15,7 @@
 package android.example.com.myinventoryapp;
 
 import android.example.com.myinventoryapp.adapters.RecyclerProductCursorAdapter;
+import android.example.com.myinventoryapp.models.Product;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +41,10 @@ import android.widget.Toast;
  */
 public class CatalogActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
+
+    String whereClause = ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
+    String[] whereArgs = {"%"};
 
     /**
      * Identifier for the product data loader
@@ -171,8 +176,8 @@ public class CatalogActivity extends AppCompatActivity implements
         return new CursorLoader(this,   // Parent activity context
                 ProductEntry.CONTENT_URI,   // Provider content URI to query
                 projection,             // Columns to include in the resulting Cursor
-                null,                   // No selection clause
-                null,                   // No selection arguments
+                whereClause,                   // No selection clause
+                whereArgs,                   // No selection arguments
                 null);                  // Default sort order
     }
 
