@@ -20,6 +20,13 @@
     tools:context=".CatalogActivity">
 
     <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:title="Search"/>
+
+    <item
         android:id="@+id/action_insert_dummy_data"
         android:title="@string/action_insert_dummy_data"
         app:showAsAction="never" />

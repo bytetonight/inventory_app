@@ -15,6 +15,7 @@
 package android.example.com.myinventoryapp;
 
 import android.example.com.myinventoryapp.adapters.RecyclerProductCursorAdapter;
+import android.example.com.myinventoryapp.config.Config;
 import android.example.com.myinventoryapp.models.Product;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,13 +39,16 @@ import android.view.View;
 import android.example.com.myinventoryapp.data.ProductContract.ProductEntry;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
+
 /**
  * Displays list of products that were entered and stored in the app.
  */
 public class CatalogActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
-
+    MenuItem searchMenuItem;
+    SearchView searchView;
     String whereClause = ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
     String[] whereArgs = {"%"};
 
@@ -142,6 +148,13 @@ public class CatalogActivity extends AppCompatActivity implements
         // Inflate the menu options from the res/menu/menu_catalog.xml file.
         // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.menu_catalog, menu);
+
+        searchMenuItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchMenuItem.getActionView();
+
+        // Setting the listener on the SearchView
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(this);
         return true;
     }
 
@@ -195,6 +208,74 @@ public class CatalogActivity extends AppCompatActivity implements
     public void onLoaderReset(Loader<Cursor> loader) {
         // Callback called when the data needs to be deleted
         recyclerProductCursorAdapter.swapCursor(null);
+    }
+
+    /**
+     * Called when the user submits the query. This could be due to a key press on the
+     * keyboard or due to pressing a submit button.
+     * The listener can override the standard behavior by returning true
+     * to indicate that it has handled the submit request. Otherwise return false to
+     * let the SearchView handle the submission by launching any associated intent.
+     *
+     * @param query the query text that is to be submitted
+     * @return true if the query has been handled by the listener, false to let the
+     * SearchView perform the default action.
+     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        query = query.replace(",", ".");
+        boolean isNumber;
+        try {
+            BigDecimal n = new BigDecimal(query);
+            isNumber = true;
+        } catch (NumberFormatException e) {
+            isNumber = false;
+        }
+
+        if (isNumber) {
+            whereClause = ProductEntry.COLUMN_PRODUCT_PRICE + " = ?";
+            double tempCents = Double.parseDouble(query) * 100.0;
+            whereArgs = new String[]{String.valueOf(tempCents)};
+        }
+        else {
+            whereClause = ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
+            whereArgs = new String[]{"%"+query+"%"};
+        }
+
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
+        return false;
+    }
+
+    /**
+     * Called when the query text is changed by the user.
+     *
+     * @param newText the new content of the query text field.
+     * @return false if the SearchView should perform the default action of showing any
+     * suggestions if available, true if the action was handled by the listener.
+     */
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (newText.trim().length() == 0) {
+            whereClause = null;
+            whereArgs = null;
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        }
+        return false;
+    }
+
+
+    /**
+     * The user is attempting to close the SearchView.
+     *
+     * @return true if the listener wants to override the default behavior of clearing the
+     * text field and dismissing it, false otherwise.
+     */
+    @Override
+    public boolean onClose() {
+        whereClause = null;
+        whereArgs = null;
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
+        return false;
     }
 }
 
