@@ -18,6 +18,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
@@ -31,6 +32,9 @@ public class ProductProvider extends ContentProvider {
 
     /** Tag for the log messages */
     public static final String LOG_TAG = ProductProvider.class.getSimpleName();
+
+
+    private static final int PRODUCT_COUNT = 999;
 
     /** URI matcher code for the content URI for the products table */
     private static final int PRODUCTS = 100;
@@ -87,6 +91,7 @@ public class ProductProvider extends ContentProvider {
         // Figure out if the URI matcher can match the URI to a specific code
         int match = productUriMatcher.match(uri);
         switch (match) {
+
             case PRODUCTS:
                 // For the PRODUCTS code, query the products table directly with the given
                 // projection, selection, selection arguments, and sort order. The cursor

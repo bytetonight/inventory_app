@@ -33,6 +33,12 @@
     <!-- Subtitle text for the empty view that prompts the user to add a product [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Get started by adding products</string>
 
+    <!-- Title text for the no results view, which describes the empty warehouse image [CHAR LIMIT=50] -->
+    <string name="no_results_view_title_text">Sorry, no results found</string>
+
+    <!-- Subtitle text for the no results view that prompts the user to try a different search [CHAR LIMIT=50] -->
+    <string name="no_results_view_subtitle_text">Please try a different search term</string>
+
 
     <!-- Label for editor menu option to save product and leave editor [CHAR LIMIT=20] -->
     <string name="action_save">Save</string>
@@ -105,5 +111,6 @@
     <string name="no_app_installed">It seems you have no suitable App installed and setup to send Emails</string>
     <string name="product_request_subject">Product request</string>
     <string name="product_request_message">Dear Merchant, I require your product \"%1$s\" in a Quantity of 10.</string>
+    <string name="records_in_database">\u0020records</string>
 
 </resources>

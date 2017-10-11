@@ -48,6 +48,28 @@
             style="@style/empty_view_hint" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/no_results_view"
+        style="@style/empty_view_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/no_results_image"
+            style="@style/empty_view_image"
+            android:src="@drawable/warehouse_clipart" />
+
+        <TextView
+            android:id="@+id/no_results_title_text"
+            style="@style/no_results_view_message"
+            android:text="@string/no_results_view_title_text" />
+
+        <TextView
+            android:id="@+id/no_results_subtitle_text"
+            style="@style/no_results_view_hint"
+            android:text="@string/no_results_view_subtitle_text" />
+    </RelativeLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:src="@drawable/ic_plus_one_white_24dp"

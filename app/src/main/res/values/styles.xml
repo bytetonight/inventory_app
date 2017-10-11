@@ -221,6 +221,14 @@
         <item name="android:textColor">#A2AAB0</item>
     </style>
 
+    <style name="no_results_view_message" parent="emüty_view_message">
+        <item name="android:layout_below">@+id/no_results_image</item>
+    </style>
+
+    <style name="no_results_view_hint" parent="empty_view_hint">
+        <item name="android:layout_below">@+id/no_results_title_text</item>
+    </style>
+
     <style name="catalog_fab_btn">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
