@@ -396,6 +396,12 @@ public class EditorActivity extends AppCompatActivity implements
         }
 
         if (TextUtils.isEmpty(product.getName())) {
+
+            binding.nameEditText.setError(String.format(
+                    getString(R.string.field_is_mandatory),
+                    getString(R.string.label_product_name)
+            ));
+
             Toast.makeText(this,
                     String.format(
                             getString(R.string.field_is_mandatory),

@@ -112,5 +112,6 @@
     <string name="product_request_subject">Product request</string>
     <string name="product_request_message">Dear Merchant, I require your product \"%1$s\" in a Quantity of 10.</string>
     <string name="records_in_database">\u0020records</string>
+    <string name="search">Search</string>
 
 </resources>

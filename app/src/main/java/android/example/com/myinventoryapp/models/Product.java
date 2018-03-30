@@ -117,7 +117,7 @@ public class Product extends BaseObservable {
      * @param priceString is the String coming from the price EditText
      */
     public void setPrice(String priceString) {
-        //The commented out code works with various currencies but if
+        //The commented out code works with various currencies BUT if
         //I use Local.GERMANY, priceString will contain an unknown character, just not the €
         //which is not replaced, and which will cause the cast to Double to fail
         priceString = priceString.replaceAll("[^0-9.,]+","");
@@ -145,7 +145,7 @@ public class Product extends BaseObservable {
     public String getLocalizedPrice() {
         if (price == 0)
             return null; //This will prevent the App from assuming a new product is an existing one
-        return NumberFormat.getCurrencyInstance(Config.USER_LOCALE).format(price / 100.0);
+        return NumberFormat.getCurrencyInstance().format(price / 100.0);
     }
 
     public void setLocalizedPrice(String localizedPrice) {
@@ -196,7 +196,7 @@ public class Product extends BaseObservable {
 
     public void setQuantity(String quantity) {
         if (!quantity.isEmpty()) {
-            int tempQuantity = Integer.parseInt(quantity);;
+            int tempQuantity = Integer.parseInt(quantity);
             if (tempQuantity != this.quantity) {
                 this.quantity = tempQuantity;
                 raisePropertyChangedEvent("quantity");

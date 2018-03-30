@@ -28,8 +28,10 @@ import android.util.Log;
 import android.view.View;
 import android.example.com.myinventoryapp.data.ProductContract.ProductEntry;
 
-
-
+/**
+ * Clicks on clickable databindings are handled here
+ * see layout/list_item.xml android:onClick attributes for details
+ */
 public class Handlers {
 
     public void onClickViewProductDetails(View v, Product product) {
@@ -40,9 +42,9 @@ public class Handlers {
         int productId = product.getId();
         // Form the content URI that represents the specific product that was clicked on,
         // by appending the "id" (passed as input to this method) onto the
-        // {@link ProductEntry#CONTENT_URI}.
+        //{@link ProductEntry#CONTENT_URI} .
         // For example, the URI would be "content://com.bytetonight.warehouse/products/2"
-        // if the product with ID 2 was clicked on.
+        // if the view displaying the product with ID 2 was clicked on.
         Uri currentProductUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, productId);
 
         // Set the URI on the data field of the intent

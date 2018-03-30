@@ -14,14 +14,8 @@
 
 package android.example.com.myinventoryapp;
 
-import android.content.ContentResolver;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
 import android.example.com.myinventoryapp.adapters.RecyclerProductCursorAdapter;
-import android.example.com.myinventoryapp.data.ProductProvider;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContentResolverCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -44,28 +38,48 @@ import android.widget.Toast;
 
 import java.math.BigDecimal;
 
-import static android.R.attr.data;
-import static android.R.attr.duration;
-import static android.icu.lang.UCharacter.JoiningGroup.E;
-
 /**
  * Displays list of products that were entered and stored in the app.
  */
 public class CatalogActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
+    // The LoaderManager.LoaderCallbacks<Cursor> can also be implemented this way
+    // better for MVP, in which case the Activity doesn't have to implement the interface
+    private LoaderManager.LoaderCallbacks<Cursor> cursorLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
+        @Override
+        public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+            return null;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
+        }
+    };
+
     Boolean inSearchMode = false;
     Integer recordsInDatabase;
     MenuItem searchMenuItem;
     SearchView searchView;
-    String whereClause = ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
+    /**
+     * renamed to CONDITION because that's exactly what it is
+     * only records matching the condition will be included
+     * example: hair = blonde, eyes = blue, posterior LIKE %apple%
+     */
+    String whereCondition = ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
     String[] whereArgs = {"%"};
 
     /**
      * Identifier for the product data loader
      */
     private static final int PRODUCTS_LOADER_ID = 0;
-    private static final int PRODUCT_COUNT_ID = 1;
+    private static final int COUNT_LOADER_ID = 1;
 
     private RecyclerView recyclerView;
 
@@ -107,30 +121,26 @@ public class CatalogActivity extends AppCompatActivity implements
         if (emptyView != null)
             emptyView.setVisibility(View.GONE);
 
-
+        // Same as empty view, just for when the database is actually not empty, but no results shown
         noResultsView = findViewById(R.id.no_results_view);
         if (noResultsView != null)
             noResultsView.setVisibility(View.GONE);
+
         // Setup an Adapter to create a list item for each row of product data in the Cursor.
         // There is no product data yet (until the loader finishes) so pass in null for the Cursor.
-
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CatalogActivity.this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerProductCursorAdapter = new RecyclerProductCursorAdapter(this, null);
         recyclerView.setAdapter(recyclerProductCursorAdapter);
 
-        //Clicks are assigned in XML Databinding and handled in the Handlers class
+        //Clicks are assigned in XML Databinding and handled in the {@link Handlers} class
 
 
-
-        // Kick off the loader
-        getLoaderManager().initLoader(PRODUCT_COUNT_ID, null, this);
-        //getLoaderManager().initLoader(PRODUCTS_LOADER_ID, null, this);
-        //Products loader init after count_loader completes
+        // Kick off the loader to get the amount of records in the database
+        getLoaderManager().initLoader(COUNT_LOADER_ID, null, this);
+        // When {@link onLoadFinished} tells us that above loader has completed
+        // We kick off the actual product loader
     }
-
-
-
 
 
     /**
@@ -138,7 +148,7 @@ public class CatalogActivity extends AppCompatActivity implements
      */
     private void insertProduct() {
         // Create a ContentValues object where column names are the keys,
-        // and Toto's product attributes are the values.
+        // and the Product's attributes are the values.
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, "T-Shirt");
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 500);
@@ -201,13 +211,13 @@ public class CatalogActivity extends AppCompatActivity implements
         Loader<Cursor> returnCursor = null;
         String[] projection;
         switch (i) {
-            case PRODUCT_COUNT_ID :
-                projection = new String[] {"COUNT(*)"};
+            case COUNT_LOADER_ID:
+                projection = new String[]{"COUNT(*)"};
                 returnCursor = new CursorLoader(this,   // Parent activity context
-                        ProductEntry.CONTENT_URI,   // Provider content URI to query
-                        projection,             // Columns to include in the resulting Cursor
-                        null,                   // No selection clause
-                        null,                   // No selection arguments
+                        ProductEntry.CONTENT_URI,       // Provider content URI to query
+                        projection,                     // Columns to include in the resulting Cursor
+                        null,                           // No selection clause
+                        null,                           // No selection arguments
                         null);
                 break;
 
@@ -221,13 +231,13 @@ public class CatalogActivity extends AppCompatActivity implements
                         ProductEntry.COLUMN_PRODUCT_QUANTITY};
 
 
-                // This loader will execute the ContentProvider's query method on a background thread
-                returnCursor = new CursorLoader(this,   // Parent activity context
+                // loader will execute the ContentProvider's query method on a background thread
+                returnCursor = new CursorLoader(this,// Parent activity context
                         ProductEntry.CONTENT_URI,   // Provider content URI to query
-                        projection,             // Columns to include in the resulting Cursor
-                        whereClause,                   // No selection clause
-                        whereArgs,                   // No selection arguments
-                        null);                  // Default sort order
+                        projection,                 // Columns to include in the resulting Cursor
+                        whereCondition,             // example WHERE column = ?
+                        whereArgs,                  // values for placeholders in above condition
+                        null);                      // Default sort order
                 break;
         }
 
@@ -237,29 +247,32 @@ public class CatalogActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Update {@link ProductCursorAdapter} with this new cursor containing updated product data
-        switch( loader.getId() ) {
+        switch (loader.getId()) {
 
-            case PRODUCT_COUNT_ID:
+            case COUNT_LOADER_ID:
                 if (data.moveToFirst()) {
                     recordsInDatabase = data.getInt(0);
-                    Toast.makeText(this, String.valueOf(recordsInDatabase)+getString(R.string.records_in_database), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, String.valueOf(recordsInDatabase) +
+                            getString(R.string.records_in_database), Toast.LENGTH_SHORT).show();
                 }
-                //Decided to make the call to the products loader after the count completes due to race condition
+                // Decided to make the call to the products loader after
+                // the count completes due to race condition
                 getLoaderManager().initLoader(PRODUCTS_LOADER_ID, null, this);
                 break;
 
             case PRODUCTS_LOADER_ID:
                 recyclerProductCursorAdapter.swapCursor(data);
 
-                // Race condition means : even though the count loader is initialized first,
-                // the product loader can complete first, before recordsInDatabase has been initialized
+                // Race condition means : even though the count loader is kicked off first,
+                // the product loader CAN complete first due to async operations
+                // before recordsInDatabase has been initialized
                 if (recordsInDatabase > 0) {
-                    //We have more than zero records
+                    // We have one or more records
                     emptyView.setVisibility(View.GONE);
                     noResultsView.setVisibility(data.getCount() > 0 ? View.GONE : View.VISIBLE);
                     recyclerView.setVisibility(data.getCount() > 0 ? View.VISIBLE : View.GONE);
-                }else {
-                    //We have zero records
+                } else {
+                    // We have zero records
                     noResultsView.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
@@ -298,12 +311,13 @@ public class CatalogActivity extends AppCompatActivity implements
                 isNumber = false;
             }
 
+            // Build our prepared statement, .. yes I come from PHP and that's what it's called there
             if (isNumber) {
-                whereClause = ProductEntry.COLUMN_PRODUCT_PRICE + " = ?";
+                whereCondition = ProductEntry.COLUMN_PRODUCT_PRICE + " = ?";
                 double tempCents = Double.parseDouble(query) * 100.0;
                 whereArgs = new String[]{String.valueOf(tempCents)};
             } else {
-                whereClause = ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
+                whereCondition = ProductEntry.COLUMN_PRODUCT_NAME + " LIKE ?";
                 whereArgs = new String[]{"%" + query + "%"};
             }
 
@@ -324,7 +338,7 @@ public class CatalogActivity extends AppCompatActivity implements
     public boolean onQueryTextChange(String newText) {
         if (newText.trim().length() == 0) {
             inSearchMode = false;
-            whereClause = null;
+            whereCondition = null;
             whereArgs = null;
             getLoaderManager().restartLoader(PRODUCTS_LOADER_ID, null, this);
         }
@@ -340,7 +354,7 @@ public class CatalogActivity extends AppCompatActivity implements
      */
     @Override
     public boolean onClose() {
-        whereClause = null;
+        whereCondition = null;
         whereArgs = null;
         getLoaderManager().restartLoader(PRODUCTS_LOADER_ID, null, this);
         return false;

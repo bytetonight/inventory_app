@@ -64,6 +64,7 @@
                         tools:text="@string/label_product_name" />
 
                     <EditText
+                        android:id="@+id/nameEditText"
                         style="@style/field_column"
                         android:hint="@string/hint_product_name"
                         android:inputType="textCapWords"

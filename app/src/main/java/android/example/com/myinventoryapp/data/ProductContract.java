@@ -147,11 +147,8 @@ public final class ProductContract {
          * {@link #GENDER_MALE}, or {@link #GENDER_FEMALE}.
          */
         public static boolean isValidTargetGender(int gender) {
-            if (gender == GENDER_NOT_APPLICABLE || gender == GENDER_UNISEX ||
-                    gender == GENDER_MALE || gender == GENDER_FEMALE) {
-                return true;
-            }
-            return false;
+            return gender == GENDER_NOT_APPLICABLE || gender == GENDER_UNISEX ||
+                    gender == GENDER_MALE || gender == GENDER_FEMALE;
         }
     }
 
